@@ -16,7 +16,7 @@ python .\manage.py sqlmigrate idea_collector 0001
 
 python .\manage.py shell
 Person.objects.all()
-a = Person(name="Danilo")
+a = Person(name="Stefan")
 a.save()
 a.id
 b = Notebook()
@@ -24,7 +24,7 @@ b.title="django"
 b.describotion="Some ideas about the visionary project"
 b.save()
 Person.objects.filter(id=1)
-Person.objects.filter(name__startswith='Da')
+Person.objects.filter(name__startswith='Ste')
 
 python manage.py createsuperuser
 

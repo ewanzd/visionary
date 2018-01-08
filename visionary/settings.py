@@ -75,10 +75,21 @@ WSGI_APPLICATION = 'visionary.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-DATABASES = {
+"""DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}"""
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'e1700584_2018_visionary',
+        'USER': 'e1700584',
+        'PASSWORD': 'xAXWU4uw4BF6',
+        'HOST': 'mysql.cc.puv.fi',
+        'PORT': '3306',
     }
 }
 
@@ -120,6 +131,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    'C:\Projects\django\visionary\static',
+]
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,

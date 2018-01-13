@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Page Title</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="manage.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+<body>
+  <h1>Persons</h1>
+  <div id="app">
+    <div>
+      <p>Person name:</p>
+      <input type="text" id="person" />
+      <button v-on:Click="createPerson">Add person</button>
+    </div>
+    <div v-for="(person, index) in personList">
+      <input v-model="person.name"><button v-on:click="updatePerson(index)">Update</button><button v-on:click="deletePerson(index)">Delete</button>
+    </div>
+    <p>{{ message }}</p>
+  <script>
+  var app = new Vue({
+    el: '#app',
+    data: {
+      message: '',
+      personList: []
+    },
+    created: function () {
+      var response = sendRequest('http://127.0.0.1:8000/persons/', READ);
+      for (var i = 0; i < response.length; i++) {
+        var obj = response[i];
+        this.personList.push(obj);
+      }
+    },
+    methods: {
+      createPerson: function() {
+        var personName = document.getElementById("person");
+        var request = { name: personName.value };
+        var response = sendRequest('http://127.0.0.1:8000/persons/', CREATE, JSON.stringify(request));
+        this.personList.push(response);
+      },
+      deletePerson: function(index) {
+        var obj = this.personList[index];
+        var response = sendRequest(obj.url, DELETE);
+        this.personList.splice(index, 1);
+        this.message = 'Record has been successfully deleted!';
+      },
+      updatePerson: function (index) {
+        var obj = this.personList[index];
+        var request = { name: obj.name };
+        var response = sendRequest(obj.url, UPDATE, JSON.stringify(request));
+        this.message = 'Record has been successfully updated!';
+      }
+    }
+  })
+  </script>
+</body>
+</html>

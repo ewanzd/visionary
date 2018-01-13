@@ -1,12 +1,24 @@
-function sendRequest(httpMethod, path, jsonObj) {
+const READ = 'GET';
+const CREATE = 'POST';
+const UPDATE = 'PUT';
+const DELETE = 'DELETE';
+
+function sendRequest(url, httpMethod, data) {
   var request = new XMLHttpRequest();
-  request.open(httpMethod, "http://127.0.0.1:8000/" + path, false);
+  request.open(httpMethod, url, false);
   request.setRequestHeader("Authorization", "Basic " + btoa("admin:password123"));
   request.setRequestHeader("X-CSRFToken", readCookie("csrftoken"));
   request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  request.send(jsonObj);
-  var array = JSON.parse(request.responseText);
-  return array;
+  if (typeof data !== 'undefined') {
+    request.send(data);
+  }
+  else {
+    request.send();
+  }
+  if(request.responseText) {
+    return JSON.parse(request.responseText);
+  }
+  return {};
 }
 
 function readCookie(name) {

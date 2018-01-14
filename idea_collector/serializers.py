@@ -9,9 +9,9 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
 class NotebookSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Notebook
-        fields = ('title', 'description')
+        fields = ('__all__')
 
 class NoteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Note
-        fields = ('subject', 'content', 'keyword', 'person', 'created', 'notebook')
+        fields = ('__all__')

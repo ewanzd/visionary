@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Notebooks</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="manage.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+<body>
+  <h1>Notebooks</h1>
+  <div id="app">
+    <div>
+      <p>Notebook title:</p>
+      <input type="text" id="notebookTitle" />
+      <p>Notebook description:</p>
+      <input type="text" id="notebookDescription" />
+      <button v-on:Click="createNotebook">Add notebook</button>
+    </div>
+    <br />
+    <h2>Entries</h2>
+    <div v-for="(notebook, index) in notebookList">
+      <input v-model="notebook.title">
+      <input v-model="notebook.description">
+      <button v-on:click="updateNotebook(index)">Update</button>
+      <button v-on:click="deleteNotebook(index)">Delete</button>
+    </div>
+    <p>{{ message }}</p>
+  <script>
+  var app = new Vue({
+    el: '#app',
+    data: {
+      message: '',
+      notebookList: []
+    },
+    created: function () {
+      var response = sendRequest('http://127.0.0.1:8000/notebooks/', READ);
+      for (var i = 0; i < response.length; i++) {
+        var obj = response[i];
+        this.notebookList.push(obj);
+      }
+    },
+    methods: {
+      createNotebook: function() {
+        var notebookTitle = document.getElementById("notebookTitle");
+        var notebookDescription = document.getElementById("notebookDescription");
+        var request = { title: notebookTitle.value, description: notebookDescription.value };
+        var response = sendRequest('http://127.0.0.1:8000/notebooks/', CREATE, JSON.stringify(request));
+        this.notebookList.push(response);
+      },
+      deleteNotebook: function(index) {
+        var obj = this.notebookList[index];
+        var response = sendRequest(obj.url, DELETE);
+        this.notebookList.splice(index, 1);
+        this.message = 'Record has been successfully deleted!';
+      },
+      updateNotebook: function (index) {
+        var obj = this.notebookList[index];
+        var request = { title: obj.title, description: obj.description };
+        var response = sendRequest(obj.url, UPDATE, JSON.stringify(request));
+        this.message = 'Record has been successfully updated!';
+      }
+    }
+  })
+  </script>
+</body>
+</html>

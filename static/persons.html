@@ -47,7 +47,7 @@
         this.personList.splice(index, 1);
         this.message = 'Record has been successfully deleted!';
       },
-      updatePerson: function (index) {
+      updatePerson: function(index) {
         var obj = this.personList[index];
         var request = { name: obj.name };
         var response = sendRequest(obj.url, UPDATE, JSON.stringify(request));

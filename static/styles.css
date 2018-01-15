@@ -1,17 +1,24 @@
-table {
-  border-collapse: collapse;
+input.cellinput {
   width: 100%;
 }
 
-th {
-  height: 40px;
-  background-color: #ffcb6b;
-}
-
-td {
-  background-color: #ffdb99;
-}
-
-table, th, td {
+div.row {
+  display: table;
+  table-layout: fixed;
+  border-spacing: 7px;
   border: 1px solid black;
+}
+
+div.column {
+  display: table-cell;
+  text-align: center;
+}
+
+div.headerrow {
+  background-color: #f1cbac;
+}
+
+div.headercolumn {
+  display: table-cell;
+  text-align: left;
 }

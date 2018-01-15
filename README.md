@@ -1,3 +1,5 @@
+School project
+
 pip list
 pip install django==2.0
 django-admin --version
@@ -27,4 +29,3 @@ Person.objects.filter(id=1)
 Person.objects.filter(name__startswith='Ste')
 
 python manage.py createsuperuser
-

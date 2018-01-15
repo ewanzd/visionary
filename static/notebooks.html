@@ -18,11 +18,22 @@
     </div>
     <br />
     <h2>Entries</h2>
-    <div v-for="(notebook, index) in notebookList">
-      <input v-model="notebook.title">
-      <input v-model="notebook.description">
-      <button v-on:click="updateNotebook(index)">Update</button>
-      <button v-on:click="deleteNotebook(index)">Delete</button>
+    <div class="row headerrow">
+      <div class="column headercolumn" style="width: 250px;">Title</div>
+      <div class="column headercolumn" style="width: 250px;">Description</div>
+      <div class="column headercolumn" style="width: 150px;"></div>
+    </div>
+    <div class="row" v-for="(notebook, index) in notebookList">
+      <div class="column" style="width: 250px;">
+        <input class="cellinput" v-model="notebook.title">
+      </div>
+      <div class="column" style="width: 250px;">
+        <input class="cellinput" v-model="notebook.description">
+      </div>
+      <div class="column" style="width: 150px;">
+        <button style="width: 45%;" v-on:click="updateNotebook(index)">Update</button>
+        <button style="width: 45%;" v-on:click="deleteNotebook(index)">Delete</button>
+      </div>
     </div>
     <p>{{ message }}</p>
   <script>

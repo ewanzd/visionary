@@ -30,7 +30,9 @@
       </div>
     </div>
     <p>{{ message }}</p>
+  </div>
   <script>
+  const personsUrl = 'http://127.0.0.1:8000/persons/';
   var app = new Vue({
     el: '#app',
     data: {
@@ -38,7 +40,7 @@
       personList: []
     },
     created: function () {
-      var response = sendRequest('http://127.0.0.1:8000/persons/', READ);
+      var response = sendRequest(personsUrl, READ);
       for (var i = 0; i < response.length; i++) {
         var obj = response[i];
         this.personList.push(obj);
@@ -48,20 +50,20 @@
       createPerson: function() {
         var personName = document.getElementById("person");
         var request = { name: personName.value };
-        var response = sendRequest('http://127.0.0.1:8000/persons/', CREATE, JSON.stringify(request));
+        var response = sendRequest(personsUrl, CREATE, JSON.stringify(request));
         this.personList.push(response);
-      },
-      deletePerson: function(index) {
-        var obj = this.personList[index];
-        var response = sendRequest(obj.url, DELETE);
-        this.personList.splice(index, 1);
-        this.message = 'Record has been successfully deleted!';
       },
       updatePerson: function(index) {
         var obj = this.personList[index];
         var request = { name: obj.name };
         var response = sendRequest(obj.url, UPDATE, JSON.stringify(request));
         this.message = 'Record has been successfully updated!';
+      },
+      deletePerson: function(index) {
+        var obj = this.personList[index];
+        var response = sendRequest(obj.url, DELETE);
+        this.personList.splice(index, 1);
+        this.message = 'Record has been successfully deleted!';
       }
     }
   })

@@ -4,12 +4,12 @@ from .models import Person, Notebook, Note
 class PersonSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Person
-        fields = ('__all__')
+        fields = ('id', 'name', 'url')
 
 class NotebookSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Notebook
-        fields = ('__all__')
+        fields = ('id', 'title', 'description', 'url')
 
 class NoteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

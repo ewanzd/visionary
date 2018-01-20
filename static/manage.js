@@ -1,18 +1,19 @@
 const READ = 'GET';
 const CREATE = 'POST';
-const UPDATE = 'PUT';
+const UPDATE = 'PATCH';
 const DELETE = 'DELETE';
+const authUrl = 'http://127.0.0.1:8000/static/auth.html';
 
 function sendRequest(url, httpMethod, data) {
   var auth = getCookie("auth");
   if (auth == null || auth == "") {
-      alert("Please authenticate you first: http://127.0.0.1:8000/static/auth.html");
+      alert("Please authenticate you first: " + authUrl);
       return {};
   }
 
   var request = new XMLHttpRequest();
   request.open(httpMethod, url, false);
-  request.setRequestHeader("Authorization", "Basic " + auth); // btoa("admin:password123"));
+  request.setRequestHeader("Authorization", "Basic " + auth);
   request.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
   request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
   if (typeof data !== 'undefined') {

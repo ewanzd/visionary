@@ -36,7 +36,9 @@
       </div>
     </div>
     <p>{{ message }}</p>
+  </div>
   <script>
+  const notebooksUrl = 'http://127.0.0.1:8000/notebooks/';
   var app = new Vue({
     el: '#app',
     data: {
@@ -44,7 +46,7 @@
       notebookList: []
     },
     created: function () {
-      var response = sendRequest('http://127.0.0.1:8000/notebooks/', READ);
+      var response = sendRequest(notebooksUrl, READ);
       for (var i = 0; i < response.length; i++) {
         var obj = response[i];
         this.notebookList.push(obj);
@@ -55,7 +57,7 @@
         var notebookTitle = document.getElementById("notebookTitle");
         var notebookDescription = document.getElementById("notebookDescription");
         var request = { title: notebookTitle.value, description: notebookDescription.value };
-        var response = sendRequest('http://127.0.0.1:8000/notebooks/', CREATE, JSON.stringify(request));
+        var response = sendRequest(notebooksUrl, CREATE, JSON.stringify(request));
         this.notebookList.push(response);
       },
       deleteNotebook: function(index) {

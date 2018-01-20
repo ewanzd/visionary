@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Notes</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="manage.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+<body>
+  <h1>Notes</h1>
+  <div id="app">
+    <div>
+      <h2>Create note</h2>
+      <p>Subject:</p>
+      <input type="text" id="noteSubject" style="width: 250px;" />
+      <p>Content:</p>
+      <textarea id="noteContent" placeholder="Text..." style="width: 250px;"></textarea>
+      <p>Keywords (split with ';' e.g. 'school;homework'):</p>
+      <input type="text" id="noteKeyword" style="width: 250px;" />
+      <p>Person:</p>
+      <select id="notePerson" style="width: 250px;">
+        <option v-for="option in personList" v-bind:value="option.url">
+          {{ option.name }}
+        </option>
+      </select>
+      <p>Notebook:</p>
+      <select id="noteNotebook" style="width: 250px;">
+        <option v-for="option in notebookList" v-bind:value="option.url">
+          {{ option.title }}
+        </option>
+      </select>
+      <br /><br />
+      <button v-on:Click="createNote" style="width: 250px;">Add note</button>
+    </div>
+    <br />
+    <h2>Entries</h2>
+    <div class="row headerrow">
+      <div class="column headercolumn" style="width: 250px;">Subject</div>
+      <div class="column headercolumn" style="width: 250px;">Content</div>
+      <div class="column headercolumn" style="width: 250px;">Keyword</div>
+      <div class="column headercolumn" style="width: 100px;">Person</div>
+      <div class="column headercolumn" style="width: 100px;">Notebook</div>
+      <div class="column headercolumn" style="width: 150px;"></div>
+    </div>
+    <div class="row" v-for="(note, index) in noteList">
+      <div class="column" style="width: 250px;">
+        <input class="cellinput" v-model="note.subject">
+      </div>
+      <div class="column" style="width: 250px;">
+        <input class="cellinput" v-model="note.content">
+      </div>
+      <div class="column" style="width: 250px;">
+        <input class="cellinput" v-model="note.keyword">
+      </div>
+      <div class="column" style="width: 100px;">
+        <select style="width:100%;" v-model="note.person">
+          <option v-for="option in personList" v-bind:value="option.url">
+            {{ option.name }}
+          </option>
+        </select>
+      </div>
+      <div class="column" style="width: 100px;">
+        <select style="width:100%;" v-model="note.notebook">
+          <option v-for="option in notebookList" v-bind:value="option.url">
+            {{ option.title }}
+          </option>
+        </select>
+      </div>
+      <div class="column" style="width: 150px;">
+        <button v-on:click="updateNote(index)">Update</button>
+        <button v-on:click="deleteNote(index)">Delete</button>
+      </div>
+    </div>
+    <p>{{ message }}</p>
+  </div>
+  <script>
+  const personsUrl = 'http://127.0.0.1:8000/persons/';
+  const notebooksUrl = 'http://127.0.0.1:8000/notebooks/';
+  const notesUrl = 'http://127.0.0.1:8000/notes/';
+  var app = new Vue({
+    el: '#app',
+    data: {
+      message: '',
+      noteList: [],
+      personList: [],
+      notebookList: []
+    },
+    created: function () {
+      var responsePersons = sendRequest(personsUrl, READ);
+      for (var i = 0; i < responsePersons.length; i++) {
+        var obj = responsePersons[i];
+        this.personList.push(obj);
+      }
+      var responseNotebooks = sendRequest(notebooksUrl, READ);
+      for (var i = 0; i < responseNotebooks.length; i++) {
+        var obj = responseNotebooks[i];
+        this.notebookList.push(obj);
+      }
+      var responseNotes = sendRequest(notesUrl, READ);
+      for (var i = 0; i < responseNotes.length; i++) {
+        var obj = responseNotes[i];
+        this.noteList.push(obj);
+      }
+    },
+    methods: {
+      createNote: function() {
+        var noteSubject = document.getElementById("noteSubject");
+        var noteContent = document.getElementById("noteContent");
+        var noteKeyword = document.getElementById("noteKeyword");
+        var notePerson = document.getElementById("notePerson");
+        var noteNotebook = document.getElementById("noteNotebook");
+        var noteCreated = new Date().toISOString();
+        var request = { subject: noteSubject.value, content: noteContent.value,
+          keyword: noteKeyword.value, created: noteCreated,
+          person: notePerson.value, notebook: noteNotebook.value };
+        var response = sendRequest(notesUrl, CREATE, JSON.stringify(request));
+        this.noteList.push(response);
+      },
+      deleteNote: function(index) {
+        var obj = this.noteList[index];
+        var response = sendRequest(obj.url, DELETE);
+        this.noteList.splice(index, 1);
+        this.message = 'Record has been successfully deleted!';
+      },
+      updateNote: function(index) {
+        var obj = this.noteList[index];
+        var request = { subject: obj.subject, content: obj.content, keyword:
+          obj.keyword, person: obj.person, notebook: obj.notebook };
+        var response = sendRequest(obj.url, UPDATE, JSON.stringify(request));
+        this.message = 'Record has been successfully updated!';
+      }
+    }
+  })
+  </script>
+</body>
+</html>
